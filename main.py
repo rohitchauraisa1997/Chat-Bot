@@ -4,7 +4,7 @@ import nltk
 # used to stem our words.
 from nltk.stem.lancaster import LancasterStemmer
 import numpy as np
-import tensorflow as tf
+import tensorflow 
 import random
 import tflearn
 
@@ -33,7 +33,7 @@ for intent in data["intents"]:
         '''
         wrds = nltk.word_tokenize(pattern)
         words.extend(wrds)
-        docs_x.append(pattern)
+        docs_x.append(wrds)
         docs_y.append(intent["tag"])
         # print("-"*50)
         # print(pattern)
@@ -50,7 +50,7 @@ for intent in data["intents"]:
 stemming all words in words list.
 and removing any duplicates.
 '''
-words = [stemmer.stem(w.lower()) for w in words]
+words = [stemmer.stem(w.lower()) for w in words if w!= "?"]
 print("*"*50)
 words = sorted(list(set(words)))
 print("words",words)
@@ -101,3 +101,33 @@ for x, doc in enumerate(docs_x):
 
 training = np.array(training)
 output = np.array(output)
+
+print("+="*50)
+print("training:", training)
+print("output:", output)
+print("+="*50)
+'''
+Building our Model.
+'''
+
+
+tensorflow.compat.v1.reset_default_graph()
+net = tflearn.input_data(shape=[None, len(training[0])])
+net = tflearn.fully_connected(net, 8)
+net = tflearn.fully_connected(net, 8)
+net = tflearn.fully_connected(net, len(output[0]), activation="softmax")
+net = tflearn.regression(net)
+
+model = tflearn.DNN(net)
+'''
+fitting our model i.e. passing it our training data.
+n_epoch is the amount of time its gonna see the same data.
+'''
+
+model.fit(training, output, n_epoch=1000, batch_size=8, show_metric=True)
+model.save("model.tflearn")
+# try:
+#     model.load("model.tflearn")
+# except:
+#     model.fit(training, output, n_epoch=1000, batch_size=8, show_metric=True)
+#     model.save("model.tflearn")
