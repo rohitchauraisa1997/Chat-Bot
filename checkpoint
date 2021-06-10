@@ -1,0 +1,2 @@
+model_checkpoint_path: "/Users/rohit.chaurasia/Desktop/Chat-Bot/model.tflearn"
+all_model_checkpoint_paths: "/Users/rohit.chaurasia/Desktop/Chat-Bot/model.tflearn"

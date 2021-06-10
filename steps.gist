@@ -1,0 +1,4 @@
+> Create Conda environment
+    conda create -n chatbot python=3.8
+    conda activate chatbot 
+    conda remove --name chatbot --all
